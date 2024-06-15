@@ -1,5 +1,5 @@
-import { Container, VStack, Image, Text, IconButton, Box } from "@chakra-ui/react";
-import { FaTimes, FaArrowRight, FaArrowLeft } from "react-icons/fa";
+import { Container, VStack, Image, Text, IconButton, Box, Editable, EditableInput, EditablePreview, Heading } from "@chakra-ui/react";
+import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 import { useState } from "react";
 
 const Index = () => {
@@ -16,6 +16,18 @@ const Index = () => {
 
   const handlePrevPhoto = () => {
     setCurrentPhotoIndex((prevIndex) => (prevIndex - 1 + photos.length) % photos.length);
+  };
+
+  const [qaSections, setQaSections] = useState([
+    { question: "What is your favorite programming language?", answer: "JavaScript" },
+    { question: "What is your hobby?", answer: "Reading books" },
+    { question: "What is your dream job?", answer: "Software Architect" }
+  ]);
+
+  const handleQaChange = (index, field, value) => {
+    const newQaSections = [...qaSections];
+    newQaSections[index][field] = value;
+    setQaSections(newQaSections);
   };
 
   return (
@@ -57,6 +69,28 @@ const Index = () => {
           <Text fontSize="lg">Age: 30</Text>
           <Text fontSize="lg">Occupation: Software Engineer</Text>
         </Box>
+      </VStack>
+      <VStack spacing={4} mt={8} width="100%">
+        {qaSections.map((qa, index) => (
+          <Box key={index} width="100%">
+            <Heading size="md">Question {index + 1}</Heading>
+            <Editable
+              defaultValue={qa.question}
+              onSubmit={(value) => handleQaChange(index, "question", value)}
+            >
+              <EditablePreview />
+              <EditableInput />
+            </Editable>
+            <Heading size="sm" mt={2}>Answer</Heading>
+            <Editable
+              defaultValue={qa.answer}
+              onSubmit={(value) => handleQaChange(index, "answer", value)}
+            >
+              <EditablePreview />
+              <EditableInput />
+            </Editable>
+          </Box>
+        ))}
       </VStack>
     </Container>
   );
